@@ -1,0 +1,13 @@
+Must have:
+-add
+-subtract
+-division
+-multiplication
+-parentheses
+-square root
+-power to
+UI:
+-buttons for 0-9
+-buttons for operations
+-field for writing operations and receiving output
+-button for deleting
