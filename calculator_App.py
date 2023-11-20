@@ -3,6 +3,19 @@ import tkinter
 equation = ""
 
 
+def find_and_replace_sqrt():
+    global equation
+    operators_list = ["+", "-", "/", "*", "**"]
+    for i in range(len(equation)):
+        if equation[i] == "√":
+            equation_to_replace = ""
+            for j in range(i, len(equation)):
+                if equation[j] in operators_list:
+                    break
+                equation_to_replace += equation[j]
+            equation = equation.replace(equation_to_replace, f"{equation_to_replace[1:]}**0.5")
+
+
 def is_float(value):
     try:
         float(value)
@@ -30,15 +43,28 @@ def clear():
     operation_field.config(text=equation)
 
 
+def delete_one_by_one():
+    global equation
+    try:
+        equation = equation.rstrip(equation[-1])
+    except IndexError:
+        pass
+    operation_field.config(text=equation)
+
+
 def calculate():
     global equation
 
     if equation != "":
         try:
+            if "√" in equation:
+                find_and_replace_sqrt()
+
             equation = str(eval(equation))
             if is_float(equation):
                 if len(equation) > 8:
                     equation = str(round(eval(equation), 2))
+
         except (SyntaxError, ZeroDivisionError):
             equation = "Error"
 
@@ -115,14 +141,20 @@ zero_button = tkinter.Button(operators_frame, text="0", font=("Times", 30), comm
 zero_button.place(x=200, y=360, width=100, height=90)
 
 # special buttons
-delete_button = tkinter.Button(operators_frame, text="C", font=("Times", 30), command=clear)
-delete_button.place(x=400, y=0, width=100, height=90)
+clear_button = tkinter.Button(operators_frame, text="C", font=("Times", 30), command=clear)
+clear_button.place(x=400, y=0, width=100, height=90)
+delete_button = tkinter.Button(operators_frame, text="<=", font=("Times", 30), command=delete_one_by_one)
+delete_button.place(x=400, y=180, width=100, height=90)
 equals_button = tkinter.Button(operators_frame, text="==", font=("Times", 30), command=calculate)
 equals_button.place(x=300, y=360, width=100, height=90)
 close_button = tkinter.Button(operators_frame, text="Exit", font=("Times", 30), command=close_window)
 close_button.place(x=0, y=270, width=100, height=180)
 point_button = tkinter.Button(operators_frame, text=".", font=("Times", 30), command= lambda: visualize_button_press(point_button))
 point_button.place(x=100, y=360, width=100, height=90)
+first_parenthesis_button = tkinter.Button(operators_frame, text="(", font=("Times", 30), command= lambda: visualize_button_press(first_parenthesis_button))
+first_parenthesis_button.place(x=400, y=90, width=50, height=90)
+second_parenthesis_button = tkinter.Button(operators_frame, text=")", font=("Times", 30), command=lambda: visualize_button_press(second_parenthesis_button))
+second_parenthesis_button.place(x=450, y=90, width=50, height=90)
 
 
 window.mainloop()
